@@ -44,7 +44,7 @@ class SpiralSettings extends ChangeNotifier {
   String ballStyleId = 'marble';
   int difficulty = SpiralDifficulty.classic;
   SpiralMode mode = SpiralMode.classic;
-  bool isPro = false;
+  bool isPro = true; // everything unlocked — no Pro version
   int gamesPlayed = 0;
   int bestClassic = 0;
   int bestEndless = 0; // best depth in endless
