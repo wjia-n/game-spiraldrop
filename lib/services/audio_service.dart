@@ -16,6 +16,9 @@ import 'package:audioplayers/audioplayers.dart';
 ///   resumes exactly where it left off instead of restarting or dying.
 /// - Every public method catches player errors; audio can never crash the app.
 class SpiralAudio {
+  /// Per-game pitch character (spiraldrop): 1.03x. Makes SFX unique.
+  static const double _pitchMul = 1.030;
+
   static const int _rate = 22050;
   final AudioPlayer _sfx = AudioPlayer();
   final AudioPlayer _music = AudioPlayer();
@@ -97,6 +100,8 @@ class SpiralAudio {
 
   List<double> _tone(double freq, double secs,
       {double freqEnd = 0, double attack = 0.02, double harmonics = 0.25}) {
+    freq *= _pitchMul;
+    freqEnd *= _pitchMul;
     final n = (_rate * secs).round();
     final out = List<double>.filled(n, 0);
     for (int i = 0; i < n; i++) {
@@ -196,12 +201,33 @@ class SpiralAudio {
       _cache.putIfAbsent(key, () => _wav(build()));
 
   Uint8List _menuBytes() => _clip('music_menu', () {
-        // Cozy C – G – Am – F acoustic pad, 16s loop.
+        // C bass + melody 0 – 3 – 5 – 4, 16s loop. Unique to spiraldrop.
+        final bassNotes = [65.41, 87.31, 110.00, 98.00];
+        final melNotes = [392.00, 523.26, 659.26, 587.34];
+        final out = List<double>.filled((_rate * 16).round(), 0);
+        final segLen = (_rate * 4).round();
+        for (int s = 0; s < 4; s++) {
+          final bass = _tone(bassNotes[s], 3.5, harmonics: 0.4);
+          final mel = _tone(melNotes[s], 1.2, harmonics: 0.25);
+          for (int i = 0; i < bass.length && s * segLen + i < out.length; i++) {
+            out[s * segLen + i] += bass[i] * 0.5;
+          }
+          final melStart = s * segLen + segLen ~/ 4;
+          for (int i = 0; i < mel.length && melStart + i < out.length; i++) {
+            out[melStart + i] += mel[i] * 0.35;
+          }
+        }
+        return out;
+      });
+
+
+  Uint8List _gameBytes() => _clip('music_game', () {
+        // C 0 – 3 – 5 – 4 warm pad, 16s loop. Unique to spiraldrop.
         final seq = [
-          [261.63, 329.63, 392.0], // C
-          [196.0, 246.94, 293.66], // G
-          [220.0, 261.63, 329.63], // Am
-          [174.61, 220.0, 261.63], // F
+          [130.81, 164.82, 196.00],
+          [174.62, 220.00, 261.63],
+          [220.00, 261.63, 329.63],
+          [196.00, 246.95, 293.67]
         ];
         final out = <double>[];
         for (final chord in seq) {
@@ -210,24 +236,6 @@ class SpiralAudio {
         return out;
       });
 
-  Uint8List _gameBytes() => _clip('music_game', () {
-        // Driving marimba-style pluck loop over a soft bass, 12s.
-        final bass = _padChord([98.0, 146.83], 12.0);
-        final plucks = [
-          523.25, 587.33, 659.25, 783.99, 659.25, 587.33, 523.25, 440.0,
-          523.25, 587.33, 659.25, 783.99, 880.0, 783.99, 659.25, 587.33,
-        ];
-        final n = (_rate * 12).round();
-        final out = List<double>.from(bass);
-        for (int k = 0; k < plucks.length; k++) {
-          final start = (n * k / plucks.length).round();
-          final tone = _tone(plucks[k], 0.35, harmonics: 0.4);
-          for (int i = 0; i < tone.length && start + i < n; i++) {
-            out[start + i] += tone[i] * 0.3;
-          }
-        }
-        return out;
-      });
 
   // ------------------------------------------------------------------ SFX
   Future<void> _play(Uint8List bytes) async {
