@@ -4,6 +4,7 @@ import '../services/iap_service.dart';
 import '../services/settings_service.dart';
 import '../theme/spiral_themes.dart';
 import '../widgets/spiral_widgets.dart';
+import '../transfer/transfer_ui.dart';
 
 /// Settings: renameable profile, audio toggles + volume, Pro status.
 class SettingsScreen extends StatefulWidget {
@@ -76,6 +77,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           child: ListView(
             padding: const EdgeInsets.all(20),
             children: [
+              TransferSaveTile(gameSlug: 'spiraldrop'),
               _section(t, 'PROFILE', [
                 Text('Your spinner name',
                     style: SpiralLook.body(15, t)),
