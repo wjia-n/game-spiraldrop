@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import '../engine/spiral_engine.dart';
@@ -109,9 +110,9 @@ class _MenuScreenState extends State<MenuScreen> {
                     Text('Spiral Drop',
                         style: SpiralLook.display(40, t)),
                     Text(
-                        s.isPro
+                        defaultTargetPlatform == TargetPlatform.iOS ? '⭐ Gold Star' : (s.isPro
                             ? '★ PRO EDITION ★'
-                            : 'SPIN • DROP • SMASH',
+                            : 'SPIN • DROP • SMASH'),
                         style: SpiralLook.label(12, t)),
                     const SizedBox(height: 14),
                     _bestCard(t),
@@ -156,7 +157,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         }),
                         _miniBtn(
                             t,
-                            s.isPro ? '⭐ PRO' : '⭐ Go Pro',
+                            defaultTargetPlatform == TargetPlatform.iOS ? '⭐ Gold Star' : (s.isPro ? '⭐ PRO' : '⭐ Go Pro'),
                             () {
                           widget.audio.click();
                           Navigator.of(context)

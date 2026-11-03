@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
 import '../services/iap_service.dart';
@@ -162,13 +163,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
               ]),
               const SizedBox(height: 16),
-              _section(t, 'PRO', [
+              _section(t, defaultTargetPlatform == TargetPlatform.iOS ? '⭐ Gold Star' : 'PRO', [
                 Row(
                   children: [
                     Text(
-                      s.isPro
+                      defaultTargetPlatform == TargetPlatform.iOS ? '⭐ Gold Star' : (s.isPro
                           ? '⭐ You are PRO — thank you!'
-                          : '🆓 Free version',
+                          : '🆓 Free version'),
                       style: SpiralLook.body(16, t),
                     ),
                     const Spacer(),
