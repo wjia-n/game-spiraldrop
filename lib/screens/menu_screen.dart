@@ -274,7 +274,9 @@ class _MenuScreenState extends State<MenuScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 6),
             child: Text(
-              SpiralDifficulty.descriptions[s.difficulty],
+              (defaultTargetPlatform == TargetPlatform.iOS
+                      ? SpiralDifficulty.descriptionsIos
+                      : SpiralDifficulty.descriptions)[s.difficulty],
               style: SpiralLook.body(12, t),
               textAlign: TextAlign.center,
             ),

@@ -30,6 +30,15 @@ class SpiralDifficulty {
     'Faster fall, tighter gaps. Hands sweaty.',
     'Pro only. Maximum speed, razor gaps.',
   ];
+
+  /// iOS copy of [descriptions] with no PRO wording (Android originals
+  /// above stay untouched). Selected by the menu on iOS only.
+  static const descriptionsIos = [
+    'Gentle spin, wide gaps. Learn the drop.',
+    'The real spiral. Steady speed, honest reds.',
+    'Faster fall, tighter gaps. Hands sweaty.',
+    'Maximum speed, razor gaps.',
+  ];
 }
 
 /// Difficulty tuning knobs.

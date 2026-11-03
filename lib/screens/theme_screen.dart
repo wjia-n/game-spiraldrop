@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../services/audio_service.dart';
 import '../services/iap_service.dart';
@@ -162,8 +163,11 @@ class _ThemeScreenState extends State<ThemeScreen>
                   child: Column(
                     children: [
                       if (locked)
-                        const Text('🔒 PRO',
-                            style: TextStyle(
+                        Text(
+                            defaultTargetPlatform == TargetPlatform.iOS
+                                ? '🔒'
+                                : '🔒 PRO',
+                            style: const TextStyle(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w900,
                                 color: Colors.white)),
@@ -342,7 +346,9 @@ class _ThemeScreenState extends State<ThemeScreen>
                   ),
                   Text(
                     locked
-                        ? 'Pro unlocks the custom tower + ball designer.'
+                        ? (defaultTargetPlatform == TargetPlatform.iOS
+                            ? '⭐ Gold Star unlocks the custom tower + ball designer.'
+                            : 'Pro unlocks the custom tower + ball designer.')
                         : 'Design your own tower theme and ball.',
                     style: SpiralLook.body(13, t),
                   ),
